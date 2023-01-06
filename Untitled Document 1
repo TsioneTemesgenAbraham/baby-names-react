@@ -1,0 +1,80 @@
+import React, { useState } from "react";
+
+function DisplayNames(props) {
+  let [search, setSearch] = useState([]);
+  let [count, setCount] = useState({
+    search,
+    favorites: [],
+    isSelected: false,
+  });
+
+  function handleSearch(event) {
+    const babyName = event.target.value;
+    const newSearch = props.data.filter((nameB) => {
+      return nameB.name.toLowerCase().includes(babyName.toLowerCase());
+    });
+
+    setSearch(newSearch);
+  }
+
+  // let favorites;
+  const favoriteName = (el) => {
+    let search = count.search.filter((i) => i.id !== el.id);
+    const favorites = count.favorites.concat(el);
+    console.log(search);
+    setCount({ search, favorites });
+  };
+
+  return (
+    <div>
+      <div>
+        <h1>BABY NAMES</h1>
+        <input
+          type="text"
+          placeholder="Enter Baby Names"
+          onChange={handleSearch}
+        />
+      </div>
+
+      <p>
+        {search
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((el, id) => {
+            if (el.sex === "f") {
+              return (
+                <span
+                  key={id}
+                  className="orange"
+                  onClick={() => favoriteName(el)}
+                >
+                  {" "}
+                  {el.name}{" "}
+                </span>
+              );
+            } else {
+              return (
+                <span
+                  key={id}
+                  className="blue"
+                  onClick={() => favoriteName(el)}
+                >
+                  {" "}
+                  {el.name}{" "}
+                </span>
+              );
+            }
+          })}
+      </p>
+      <div>
+        <ol>
+          {count.favorites.map((na) => (
+            <li key={na.id}>{na.name}</li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
+export default DisplayNames;
+
